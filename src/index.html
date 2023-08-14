@@ -6,8 +6,19 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link
+    rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+  <script src="node_modules/typescript/lib/typescript.js"></script>
+  <script src="node_modules/core-js/client/shim.min.js"></script>
+  <script src="node_modules/zone.js/dist/zone.js"></script>
+  <script src="node_modules/systemjs/dist/system.src.js"></script> <!--for old angular version - delete this row?-->
+  <script src="systemjs.config.js"></script><!--for old angular version - delete this row?-->
 </head>
 <body>
-  <app-root></app-root>
+  <app-application></app-application>
 </body>
 </html>
