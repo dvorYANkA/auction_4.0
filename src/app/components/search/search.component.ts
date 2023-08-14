@@ -15,10 +15,27 @@ import {
 })
 export class SearchComponent {
   categories: string[] = [];
-  //formModel: FormGroup = new FormGroup(null);
-  //fb: FormBuilder = new FormBuilder();
 
-  constructor(private prs: ProductService) {
+  constructor(private prs: ProductService,
+              private formBuilder: FormBuilder) {
     this.categories = this.prs.getAllCategories();
+  }
+
+  formModel = this.formBuilder.group({
+    'title': [null, Validators.minLength(3)],
+    'price': [null, this.positiveNumberValidator],
+    'category': [-1]
+  });
+
+   positiveNumberValidator(control: FormControl): any {
+    if (!control.value) return null;
+    const price = parseInt(control.value);
+    return price === null || typeof price === 'number' && price > 0 ? null : {positivenumber: true};
+  }
+
+  onSearch() {
+    if (this.formModel.valid) {
+      console.log(this.formModel.value);
+    }
   }
 }
