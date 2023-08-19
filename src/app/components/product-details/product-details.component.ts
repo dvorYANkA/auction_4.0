@@ -3,22 +3,24 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product-service';
 import { Product } from '../../models/product.model';
 import { Review } from '../../models/review.model';
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
+  providers: [ProductService]
 })
 export class ProductDetailsComponent {
-  product: Product;
-  reviews: Review[];
+  product: Product = new Product();
+  reviews: Review[] = [];
   newComment: string = '';
   newRating: number = 0;
   isReviewHidden: boolean = true;
   constructor(route: ActivatedRoute, productService: ProductService) {
     let productId: number = parseInt(route.snapshot.params['productId']);
-    this.product = productService.getProductById(productId);
-    this.reviews = productService.getReviewsForProduct(productId);
+    productService.getProductById(productId).pipe(map((res: Product) => this.product = res));
+    productService.getReviewsForProduct(productId).pipe(map((res:Review[]) => this.reviews = res));
   }
 
   addReview() {

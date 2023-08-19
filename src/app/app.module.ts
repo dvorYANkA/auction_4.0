@@ -16,6 +16,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './pipes/filter-pipe';
+import {Http} from "@angular/http";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { FilterPipe } from './pipes/filter-pipe';
     ]),
   ],
   providers: [
-    ProductService,
+    ProductService, Http,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [ApplicationComponent],

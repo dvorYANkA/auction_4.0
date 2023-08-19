@@ -1,37 +1,46 @@
 import { Product } from '../models/product.model';
 import { Review } from '../models/review.model';
+import {map, Observable} from 'rxjs';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 
+export interface ProductSearchParams {
+  title: string;
+  minPrice: number;
+  maxPrice: number;
+}
+
+@Injectable({providedIn: 'root'})
 export class ProductService {
-  getProducts(): Product[] {
-    return products.map(
-      (p) =>
-        new Product(
-          p.rating,
-          p.id,
-          p.title,
-          p.price,
-          p.description,
-          p.categories
-        )
-    );
+  searchEvent = new EventEmitter();
+
+  constructor(private http: Http) {}
+  search(params: ProductSearchParams): Observable<Product[]> {
+    return this.http
+      .get('http://localhost:8080/products', {search: this.encodeParams(params)})
+      .pipe(map(response => response.json()));
   }
-  getProductById(productId: number): Product {
-    return products.find((p) => p.id === productId) as Product;
+
+  encodeParams(params: any): URLSearchParams {
+    return Object.keys(params)
+      .filter(key => params[key])
+      .reduce((accum: URLSearchParams, key: string) => {
+        accum.append(key, params[key]);
+        return accum;
+      }, new URLSearchParams());
   }
-  getReviewsForProduct(productId: number): Review[] {
-    return reviews
-      .filter((r) => r.productId === productId)
-      .map(
-        (r) =>
-          new Review(
-            r.id,
-            r.productId,
-            new Date(r.timestamp),
-            r.user,
-            r.rating,
-            r.comment
-          )
-      );
+
+  getProducts(): Observable<Product[]> {
+    return this.http.get('http://localhost:8080/products').pipe(map(response => response.json()));
+  }
+  getProductById(productId: number): Observable<Product> {
+    return this.http.get(`http://localhost:8080/products/${productId}`).pipe(map(response => response.json()));
+  }
+  getReviewsForProduct(productId: number): Observable<Review[]> {
+    return this.http
+      .get(`http://localhost:8080/products/${productId}/reviews`).pipe(
+        map(response => response.json().map( (reviews: Review[])  => reviews.map(
+        (r: any) => new Review(r.id, r.productId, new Date(r.timestamp), r.user, r.rating, r.comment)))));
   }
   getAllCategories(): string[] {
     return ['Books', 'Electronics', 'Hardware'];
