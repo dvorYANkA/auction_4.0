@@ -16,15 +16,13 @@ export class HomeComponent {
   titleFilter: FormControl = new FormControl();
   filterCriteria: string = '';
   constructor(private productService: ProductService) {
-    this.productService.getProducts().pipe(map((resp: Product[]) => this.products = resp));
+    this.productService.getProducts().subscribe(resp => {this.products = resp});
+    console.log(this.products.toString())
     this.titleFilter.valueChanges.pipe(debounceTime(500)).subscribe(
       (value) => (this.filterCriteria = value),
       (error) => console.error(error)
     );
-    this.productService.searchEvent.subscribe(params => this.productService.search(params)
-        .pipe(map((resp: Product[]) => this.products = resp)),
-      console.error.bind(console),
-      () => console.log('DONE')
-  );
+    this.productService.searchEvent.subscribe(params => this.productService.search(params.value)
+        .subscribe(resp => this.products = resp));
   }
 }

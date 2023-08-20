@@ -2,7 +2,8 @@ import { Product } from '../models/product.model';
 import { Review } from '../models/review.model';
 import {map, Observable} from 'rxjs';
 import {EventEmitter, Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {HttpClient} from "@angular/common/http";
+import {FormControl, FormGroup} from "@angular/forms";
 
 export interface ProductSearchParams {
   title: string;
@@ -10,15 +11,14 @@ export interface ProductSearchParams {
   maxPrice: number;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class ProductService {
-  searchEvent = new EventEmitter();
+  searchEvent: EventEmitter<FormGroup> = new EventEmitter();
 
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
   search(params: ProductSearchParams): Observable<Product[]> {
     return this.http
-      .get('http://localhost:8080/products', {search: this.encodeParams(params)})
-      .pipe(map(response => response.json()));
+      .post<Product[]>('http://localhost:8080/products', {search: this.encodeParams(params)});
   }
 
   encodeParams(params: any): URLSearchParams {
@@ -31,16 +31,14 @@ export class ProductService {
   }
 
   getProducts(): Observable<Product[]> {
-    return this.http.get('http://localhost:8080/products').pipe(map(response => response.json()));
+    return this.http.get<Product[]>('http://localhost:8080/products');
   }
   getProductById(productId: number): Observable<Product> {
-    return this.http.get(`http://localhost:8080/products/${productId}`).pipe(map(response => response.json()));
+    return this.http.get(`http://localhost:8080/products/${productId}`).pipe(map(response => response));
   }
   getReviewsForProduct(productId: number): Observable<Review[]> {
     return this.http
-      .get(`http://localhost:8080/products/${productId}/reviews`).pipe(
-        map(response => response.json().map( (reviews: Review[])  => reviews.map(
-        (r: any) => new Review(r.id, r.productId, new Date(r.timestamp), r.user, r.rating, r.comment)))));
+      .get<Review[]>(`http://localhost:8080/products/${productId}/reviews`);
   }
   getAllCategories(): string[] {
     return ['Books', 'Electronics', 'Hardware'];

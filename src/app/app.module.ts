@@ -16,7 +16,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './pipes/filter-pipe';
-import {Http} from "@angular/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {Http} from "@angular/http";
   ],
   imports: [
     ReactiveFormsModule,
+    HttpClientModule,
     FormsModule,
     BrowserModule,
     RouterModule.forRoot([
@@ -41,7 +43,7 @@ import {Http} from "@angular/http";
     ]),
   ],
   providers: [
-    ProductService, Http,
+    ProductService, HttpClient,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [ApplicationComponent],

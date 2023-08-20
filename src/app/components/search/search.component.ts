@@ -35,6 +35,7 @@ export class SearchComponent {
 
   onSearch() {
     if (this.formModel.valid) {
-      this.prs.searchEvent.emit(this.formModel.value);    }
+      this.prs.searchEvent.emit(this.formModel);
+    }
   }
 }

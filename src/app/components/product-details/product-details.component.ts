@@ -19,8 +19,8 @@ export class ProductDetailsComponent {
   isReviewHidden: boolean = true;
   constructor(route: ActivatedRoute, productService: ProductService) {
     let productId: number = parseInt(route.snapshot.params['productId']);
-    productService.getProductById(productId).pipe(map((res: Product) => this.product = res));
-    productService.getReviewsForProduct(productId).pipe(map((res:Review[]) => this.reviews = res));
+    productService.getProductById(productId).subscribe(res => this.product = res);
+    productService.getReviewsForProduct(productId).subscribe(res => {this.reviews = res})
   }
 
   addReview() {
