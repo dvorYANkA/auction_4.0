@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../services/product-service';
-import {
-  FormControl,
-  FormGroup,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import {FormControl, FormBuilder, Validators, ValidatorFn, ValidationErrors, AbstractControl,} from '@angular/forms';
+import {ProductFilterModel} from "../../models/filters/product-filter.model";
 
 @Component({
   selector: 'app-search',
@@ -22,20 +18,24 @@ export class SearchComponent {
   }
 
   formModel = this.formBuilder.group({
-    'title': [null, Validators.minLength(3)],
-    'price': [null, this.positiveNumberValidator],
-    'category': [-1]
+    'title': new FormControl(null, [Validators.minLength(3)]),
+    'price': new FormControl(null, [this.positiveNumberValidator]),
+    'category': new FormControl('All categories')
   });
 
-   positiveNumberValidator(control: FormControl): any {
-    if (!control.value) return null;
-    const price = parseInt(control.value);
-    return price === null || typeof price === 'number' && price > 0 ? null : {positivenumber: true};
+   positiveNumberValidator(): ValidatorFn {
+     return (control: AbstractControl): ValidationErrors | null => {
+       if (!control.value) return null;
+       const price = parseInt(control.value);
+       return price === null || typeof price === 'number' && price > 0 ? null : {positivenumber: true};
+     }
   }
 
   onSearch() {
     if (this.formModel.valid) {
-      this.prs.searchEvent.emit(this.formModel);
+      const filter: ProductFilterModel = this.formModel.value;
+      console.log(filter.title!.toString() + filter.category!.toString() + filter.price!.toString())
+      this.prs.search(filter).subscribe();
     }
   }
 }

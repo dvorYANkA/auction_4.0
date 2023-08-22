@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { ProductService } from '../../services/product-service';
-import { Product } from '../../models/product.model';
+import {Component} from '@angular/core';
+import {ProductService } from '../../services/product-service';
+import {Product} from '../../models/product.model';
 import { FormControl } from '@angular/forms';
-import {debounceTime, map} from 'rxjs';
+import {debounceTime} from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +11,11 @@ import {debounceTime, map} from 'rxjs';
   styleUrls: ['./home.component.css'],
 
 })
-export class HomeComponent {
+export class HomeComponent{
   products: Product[] = [];
   titleFilter: FormControl = new FormControl();
   filterCriteria: string = '';
+
   constructor(private productService: ProductService) {
     this.productService.getProducts().subscribe(resp => {this.products = resp});
     console.log(this.products.toString())
@@ -22,7 +23,7 @@ export class HomeComponent {
       (value) => (this.filterCriteria = value),
       (error) => console.error(error)
     );
-    this.productService.searchEvent.subscribe(params => this.productService.search(params.value)
-        .subscribe(resp => this.products = resp));
+    this.productService.searchEvent.subscribe(params =>
+      params.subscribe(resp => {this.products = resp.body!}));
   }
 }

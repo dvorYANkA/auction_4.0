@@ -1,33 +1,28 @@
 import { Product } from '../models/product.model';
 import { Review } from '../models/review.model';
-import {map, Observable} from 'rxjs';
+import {map, Observable, Subject} from 'rxjs';
 import {EventEmitter, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {FormControl, FormGroup} from "@angular/forms";
-
-export interface ProductSearchParams {
-  title: string;
-  minPrice: number;
-  maxPrice: number;
-}
+import {HttpClient, HttpResponse} from "@angular/common/http";
+import {ProductFilterModel} from "../models/filters/product-filter.model";
 
 @Injectable()
 export class ProductService {
-  searchEvent: EventEmitter<FormGroup> = new EventEmitter();
+  searchEvent: EventEmitter<Observable<HttpResponse<Product[]>>> = new EventEmitter();
+
 
   constructor(private http: HttpClient) {}
-  search(params: ProductSearchParams): Observable<Product[]> {
-    return this.http
-      .post<Product[]>('http://localhost:8080/products', {search: this.encodeParams(params)});
-  }
 
-  encodeParams(params: any): URLSearchParams {
-    return Object.keys(params)
-      .filter(key => params[key])
-      .reduce((accum: URLSearchParams, key: string) => {
-        accum.append(key, params[key]);
-        return accum;
-      }, new URLSearchParams());
+  search(filter?: ProductFilterModel, reqParams?: any): Observable<HttpResponse<Product[]>> {
+    let test =  this.http
+      .post<Product[]>('http://localhost:8080/products/search', filter, {
+        params: reqParams,
+        observe: 'response'
+      });
+
+    if(test)
+     this.searchEvent.emit();
+
+    return test;
   }
 
   getProducts(): Observable<Product[]> {
