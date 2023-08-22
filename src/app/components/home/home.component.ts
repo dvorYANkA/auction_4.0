@@ -22,6 +22,6 @@ export class HomeComponent{
       (value) => (this.filterCriteria = value),
       (error) => console.error(error)
     );
-    this.productService.searchEvent.subscribe(products =>{this.products = products});
+    this.productService.searchSubject.subscribe(products =>{this.products = products});
   }
 }

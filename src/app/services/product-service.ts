@@ -7,8 +7,7 @@ import {ProductFilterModel} from "../models/filters/product-filter.model";
 
 @Injectable({providedIn: 'root'})
 export class ProductService {
-  searchEvent: EventEmitter<Product[]> = new EventEmitter();
-
+  searchSubject = new Subject<Product[]>();
 
   constructor(private http: HttpClient) {}
 

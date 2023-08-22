@@ -38,7 +38,7 @@ export class SearchComponent {
       console.log(filter.title!.toString() + filter.category!.toString() + filter.price!.toString())
       this.prs.search(filter).subscribe( (resp: HttpResponse<Product[]>) =>{
         if(resp.body) {
-          this.prs.searchEvent.emit(resp.body)
+          this.prs.searchSubject.next(resp.body)
         }
       })
     }
