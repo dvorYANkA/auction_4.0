@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { ProductService } from '../../services/product-service';
 import {FormControl, FormBuilder, Validators, ValidatorFn, ValidationErrors, AbstractControl,} from '@angular/forms';
 import {ProductFilterModel} from "../../models/filters/product-filter.model";
+import {HttpResponse} from "@angular/common/http";
+import {Product} from "../../models/product.model";
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  providers: [ProductService],
   styleUrls: ['./search.component.css'],
 })
 export class SearchComponent {
@@ -35,7 +36,11 @@ export class SearchComponent {
     if (this.formModel.valid) {
       const filter: ProductFilterModel = this.formModel.value;
       console.log(filter.title!.toString() + filter.category!.toString() + filter.price!.toString())
-      this.prs.search(filter).subscribe();
+      this.prs.search(filter).subscribe( (resp: HttpResponse<Product[]>) =>{
+        if(resp.body) {
+          this.prs.searchEvent.emit(resp.body)
+        }
+      })
     }
   }
 }

@@ -7,7 +7,6 @@ import {debounceTime} from 'rxjs';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  providers: [ProductService],
   styleUrls: ['./home.component.css'],
 
 })
@@ -23,7 +22,6 @@ export class HomeComponent{
       (value) => (this.filterCriteria = value),
       (error) => console.error(error)
     );
-    this.productService.searchEvent.subscribe(params =>
-      params.subscribe(resp => {this.products = resp.body!}));
+    this.productService.searchEvent.subscribe(products =>{this.products = products});
   }
 }

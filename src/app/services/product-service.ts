@@ -5,24 +5,19 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from "@angular/common/http";
 import {ProductFilterModel} from "../models/filters/product-filter.model";
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ProductService {
-  searchEvent: EventEmitter<Observable<HttpResponse<Product[]>>> = new EventEmitter();
+  searchEvent: EventEmitter<Product[]> = new EventEmitter();
 
 
   constructor(private http: HttpClient) {}
 
   search(filter?: ProductFilterModel, reqParams?: any): Observable<HttpResponse<Product[]>> {
-    let test =  this.http
+    return   this.http
       .post<Product[]>('http://localhost:8080/products/search', filter, {
         params: reqParams,
         observe: 'response'
       });
-
-    if(test)
-     this.searchEvent.emit();
-
-    return test;
   }
 
   getProducts(): Observable<Product[]> {

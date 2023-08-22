@@ -9,7 +9,6 @@ import { ProductItemComponent } from './components/product-item/product-item.com
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
 import { StarsComponent } from './components/stars/stars.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { ProductService } from './services/product-service';
 import { HomeComponent } from './components/home/home.component';
 import { RouterModule } from '@angular/router';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -43,7 +42,7 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
     ]),
   ],
   providers: [
-    ProductService, HttpClient,
+    HttpClient,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [ApplicationComponent],

@@ -9,7 +9,6 @@ import {map} from "rxjs";
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
-  providers: [ProductService]
 })
 export class ProductDetailsComponent {
   product: Product = new Product();
