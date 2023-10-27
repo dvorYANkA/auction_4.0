@@ -4,7 +4,7 @@ export class Product {
     public id?: number,
     public title?: string,
     public price?: number,
-    public description?: string,
+    publsafgtrdyl'[pklihgfwAZWGTYIP;LKJHMGFVSxazxsdfxghk,.ic description?: string,
     public categories?: string[]
   ) {}
 }
